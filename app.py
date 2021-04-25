@@ -76,14 +76,14 @@ categories_schema = CategorySchema(many=True)
 def get_tasks():
     tasks = Task.query.all()
 
-    return tasks_schema.jsonify(tasks)
+    return tasks_schema.jsonify(tasks), 200
 
 
 @app.route('/api/tasks/<int:id>/', methods=['GET'])
 def get_task(id):
     task = Task.query.get(id)
 
-    return task_schema.jsonify(task)
+    return task_schema.jsonify(task), 200
 
 
 @app.route('/api/tasks/', methods=['POST'])
@@ -108,7 +108,7 @@ def save_task():
         except:
             return jsonify({"message": "Duplicado"}), 500 
         
-        return task_schema.jsonify(task)
+        return task_schema.jsonify(task), 201
     
     return jsonify({"message": "Error al guardar"}), 500
 
@@ -135,7 +135,7 @@ def update_task(id):
         db.session.add(old_task)
         db.session.commit()
         
-        return task_schema.jsonify(old_task)
+        return task_schema.jsonify(old_task), 201
     
     return jsonify({"message": "Error al actualizar"}), 500
 
@@ -150,13 +150,16 @@ def delete_task(id):
         db.session.delete(task)
         db.session.commit()
 
-        return task_schema.jsonify(task)
+        return task_schema.jsonify(task), 200
     return jsonify({"message": "Error al eliminar"}), 500
 
 
 @app.route('/api/tasks/clean-all/', methods=['DELETE'])
 def delete_all():
     tasks = Task.query.all()
+
+    if len(tasks) == 0:
+        return jsonify({"message": "No content"}), 204
 
     for task in tasks:
         if task is not None:
