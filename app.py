@@ -76,21 +76,45 @@ categories_schema = CategorySchema(many=True)
 def get_tasks():
     tasks = Task.query.all()
 
+    if len(tasks) == 0:
+        return jsonify({"message": "No Content"}), 204
+
     return tasks_schema.jsonify(tasks), 200
 
 
 @app.route('/api/tasks/<int:id>/', methods=['GET'])
 def get_task(id):
+
+    if request.method != 'GET':
+        return jsonify({"message": "Method not allowed"}), 405
+
+    if type(id) != 'int':
+        return jsonify({"message": "Error, the id must be a number"}), 400
+
     task = Task.query.get(id)
+
+    if task is None:
+        return jsonify({"message": "No Found"}), 404
 
     return task_schema.jsonify(task), 200
 
 
 @app.route('/api/tasks/', methods=['POST'])
 def save_task():
+
+    if request.method != 'POST':
+        return jsonify({"message": "Method not allowed"}), 405
+
     name = request.json['name']
     category_id = request.json['category_id']
     status = request.json['status']
+
+    if name is None:
+        return jsonify({"message": "Peticion invalida, faltan datos"}), 400
+    
+    if category_id is None:
+        return jsonify({"message": "Peticion invalida, faltan datos"}), 400
+
 
     category = Category.query.get(category_id)
 
@@ -115,6 +139,9 @@ def save_task():
 
 @app.route('/api/tasks/<int:id>/', methods=['PUT'])
 def update_task(id):
+
+    if type(id) != 'int':
+        return jsonify({"message": "Error, the id must be a number"}), 400
 
     old_task = Task.query.get(id)
 
@@ -143,6 +170,9 @@ def update_task(id):
 @app.route('/api/tasks/<int:id>/', methods=['DELETE'])
 def delete_task(id):
 
+    if type(id) != 'int':
+        return jsonify({"message": "Error, the id must be a number"}), 400
+
     task = Task.query.get(id)
 
     if task is not None:
@@ -151,6 +181,10 @@ def delete_task(id):
         db.session.commit()
 
         return task_schema.jsonify(task), 200
+
+    else:
+        return jsonify({"message": "Not Found"}), 404
+
     return jsonify({"message": "Error al eliminar"}), 500
 
 
@@ -173,7 +207,27 @@ def delete_all():
 def get_categories():
     categories = Category.query.all()
 
-    return categories_schema.jsonify(categories);
+    if len(categories) == 0:
+        return jsonify({"message": "No Content"}), 204
+
+    return categories_schema.jsonify(categories)
+
+
+@app.route('/api/categories/<int:id>', methods=['GET'])
+def get_category(id):
+
+    if type(id) != 'int':
+        return jsonify({"message": "Error, the id must be a number"}), 400
+
+    category = Category.query.get(id)
+
+    if category is None:
+        return jsonify({"message": "Not Found"}), 404
+    
+
+    return category_schema.jsonify(category), 200
+    
+    
 
 
 @app.route('/api/categories/', methods=['POST'])
@@ -186,9 +240,63 @@ def save_category():
         db.session.add(category)
         db.session.commit()
 
-        return category_schema.jsonify(category)
+        return category_schema.jsonify(category), 201
     
     return jsonify({'message': 'Error de servidor'}), 500
+
+
+@app.route('/api/categories/<int:id>/', methods=['PUT'])
+def update_category(id):
+
+    if request.method != 'PUT':
+        return jsonify({"message": "Method not allowed"}), 405
+
+    if type(id) != 'int':
+        return jsonify({"message": "Error, the id must be a number"}), 400
+    
+    category = Category.query.get(id)
+
+    if category is None:
+        return jsonify({"message": "Not Found"}), 404
+
+    name = request.json['name']
+
+    category.name = name
+
+    if category.is_valid():
+        db.session.add(category)
+        db.session.commit()
+
+        return category_schema.jsonify(category), 201
+
+    return jsonify({"message": "Error de servidor"}), 500
+
+
+@app.route('/api/categories/<int:id>/', methods=['DELETE'])
+def delete_category(id):
+    
+    if request.method != 'DELETE':
+        return jsonfiy({"message": "Method not allowed"}), 405
+    
+    if type(id) != 'int':
+        return jsonify({"message": "Error, the id must be a number"}), 400
+    
+    category = Category.query.get(id)
+
+    if category is None:
+        return jsonify({"message": "Not Found"}), 404
+    
+    try:
+        db.session.delete(category)
+        db.session.commit()
+
+        return category_schema.jsonify(category), 200
+
+    except:
+        return jsonify({"message": "Internal Server Error"}), 500
+
+
+    
 
 
 if __name__ == '__main__':

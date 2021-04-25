@@ -47,9 +47,9 @@ Subsequent response definitions will only detail the expected value of the `data
 
 **Arguments**
 
-- `"name": string` the name of the task
+- `"name": string` the name of the task (required)
 - `"status": boolean` the status of the task (completed/uncompleted), by default is false (uncompleted)
-- `"category_id": int` the id of the category
+- `"category_id": int` the id of the category (required)
 
 **Response**
 
@@ -63,6 +63,7 @@ Subsequent response definitions will only detail the expected value of the `data
   "category_id": 1
 }
 ```
+
 
 ## Lookup task details
 
@@ -91,4 +92,77 @@ Subsequent response definitions will only detail the expected value of the `data
 **Response**
 
 - `404 Not Found` if the task does not exist
+- `204 No Content` 
+
+
+## List all categories
+
+
+**Definitions**
+
+`GET /api/categories/`
+
+**Response**
+
+- `200 OK` on success
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Example category"
+  },
+  {
+    "id": 2, 
+    "name": "Another example category"
+  }
+]
+```
+
+### Registering a new category
+
+**Definition**
+
+`POST /api/categories/`
+
+**Arguments**
+
+- `"name": string` the name of the category
+
+**Response**
+
+- `201 Created` on success
+
+```json
+{
+  "id": 1,
+  "name": "Example category"
+}
+```
+
+## Lookup category details
+
+`GET /api/categories/<id>/`
+
+**Response**
+
+- `404 Not found` if the category does not exist
+- `200 OK` on success
+
+```json
+{
+  "id": 1,
+  "name": "Example category"
+}
+```
+
+## Delete a category
+
+**Definition**
+
+`DELETE /api/categories/<id>/`
+
+**Response**
+
+- `404 Not Found` if the category does not exist
 - `204 No Content` 
