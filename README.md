@@ -93,6 +93,27 @@ Subsequent response definitions will only detail the expected value of the `data
 
 - `404 Not Found` if the task does not exist
 - `204 No Content` 
+- `200 OK` on success
+
+```json
+{
+  "id": 1,
+  "name": "Do something",
+  "status": false,
+  "category_id": 1
+}
+```
+
+## Delete all tasks
+
+**Definition**
+
+`DELETE /api/tasks/`
+
+**Response**
+
+- `204 No Content`
+- `200 OK` on success
 
 
 ## List all categories
