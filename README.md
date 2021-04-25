@@ -90,5 +90,5 @@ Subsequent response definitions will only detail the expected value of the `data
 
 **Response**
 
-`404 Not Found` if the task does not exist
-`204 No Content` 
+- `404 Not Found` if the task does not exist
+- `204 No Content` 
