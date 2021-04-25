@@ -48,7 +48,7 @@ Subsequent response definitions will only detail the expected value of the `data
 **Arguments**
 
 - `"name": string` the name of the task
-- `"status": boolean` the status of the task (completed/uncompleted)
+- `"status": boolean` the status of the task (completed/uncompleted), by default is false (uncompleted)
 - `"category_id": int` the id of the category
 
 **Response**
