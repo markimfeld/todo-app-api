@@ -88,9 +88,6 @@ def get_task(id):
     if request.method != 'GET':
         return jsonify({"message": "Method not allowed"}), 405
 
-    if type(id) != 'int':
-        return jsonify({"message": "Error, the id must be a number"}), 400
-
     task = Task.query.get(id)
 
     if task is None:
@@ -140,9 +137,6 @@ def save_task():
 @app.route('/api/tasks/<int:id>/', methods=['PUT'])
 def update_task(id):
 
-    if type(id) != 'int':
-        return jsonify({"message": "Error, the id must be a number"}), 400
-
     old_task = Task.query.get(id)
 
     name = request.json['name']
@@ -169,9 +163,6 @@ def update_task(id):
 
 @app.route('/api/tasks/<int:id>/', methods=['DELETE'])
 def delete_task(id):
-
-    if type(id) != 'int':
-        return jsonify({"message": "Error, the id must be a number"}), 400
 
     task = Task.query.get(id)
 
@@ -216,9 +207,6 @@ def get_categories():
 @app.route('/api/categories/<int:id>', methods=['GET'])
 def get_category(id):
 
-    if type(id) != 'int':
-        return jsonify({"message": "Error, the id must be a number"}), 400
-
     category = Category.query.get(id)
 
     if category is None:
@@ -250,9 +238,6 @@ def update_category(id):
 
     if request.method != 'PUT':
         return jsonify({"message": "Method not allowed"}), 405
-
-    if type(id) != 'int':
-        return jsonify({"message": "Error, the id must be a number"}), 400
     
     category = Category.query.get(id)
 
@@ -277,9 +262,6 @@ def delete_category(id):
     
     if request.method != 'DELETE':
         return jsonfiy({"message": "Method not allowed"}), 405
-    
-    if type(id) != 'int':
-        return jsonify({"message": "Error, the id must be a number"}), 400
     
     category = Category.query.get(id)
 
